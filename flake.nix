@@ -1,12 +1,16 @@
 {
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-24.11";
+
+    nix-github-actions.url = "github:nix-community/nix-github-actions";
+    nix-github-actions.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs =
     {
       self,
       nixpkgs,
+      nix-github-actions,
       ...
     }:
     let
@@ -35,6 +39,16 @@
         );
     in
     {
+      githubActions = nix-github-actions.lib.mkGithubMatrix (
+        let
+          # Exclude systems not supported by github actions.
+          ciSystems = builtins.filter (x: !({ "aarch64-linux" = null; } ? "${x}")) systems;
+        in
+        {
+          checks = nixpkgs.lib.getAttrs ciSystems self.checks;
+        }
+      );
+
       overlays = {
         default = import ./.nix/overlays.nix;
       };
