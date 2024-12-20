@@ -17,6 +17,7 @@
       allPackagesFrom =
         pkgs: with pkgs; {
           inherit jrg-nixpkgs-hello;
+          inherit markdown-code-runner;
         };
 
       systems = [
