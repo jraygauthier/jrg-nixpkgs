@@ -3,6 +3,10 @@
 <!--
     cSpell:ignore nixpkgs
 -->
+[![CI Status][ci-badge]][ci-url]
+
+[ci-badge]: https://github.com/jraygauthier/jrg-nixpkgs/actions/workflows/ci.yml/badge.svg
+[ci-url]: https://github.com/jraygauthier/jrg-nixpkgs/actions/workflows/ci.yml
 
 A set of [nix] packages I maintain awaiting their inclusion into upstream
 [nixpkgs].
