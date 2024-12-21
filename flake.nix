@@ -12,6 +12,7 @@
     let
       allPackagesFrom =
         pkgs: with pkgs; {
+          inherit jrg-nixpkgs-hello;
         };
 
       systems = [
