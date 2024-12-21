@@ -46,7 +46,7 @@ provides) in various other contexts:
 [overlay-install-on-any-unix]:
     doc/OverlayInstallOnAnyUnixDistro.md
 
-### Dependencies
+### Dependencies {#install-deps}
 
 The following dependencies are required in any cases:
 
@@ -61,7 +61,8 @@ The following dependencies are required in any cases:
 ## Usage
 
 You can start using this flake's packages directly without having to install
-anything (other than [nix]):
+anything (other than [nix], see [above dependencies section][install-deps] for
+details):
 
 ```bash
 $ nix develop github:jraygauthier/jrg-nixpkgs
@@ -77,6 +78,7 @@ provides) in various other contexts:
  -  [Import the overlay from a flake][overlay-import-from-flake]
  -  [Import the overlay from a classic nix module][overlay-import-from-classic-nix]
 
+[install-deps]: #install-deps
 [overlay-import-from-flake]: ./doc/OverlayImportFromFlake.md
 [overlay-import-from-classic-nix]: ./doc/OverlayImportFromClassicNix.md
 
