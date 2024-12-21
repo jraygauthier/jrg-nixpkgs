@@ -1,5 +1,9 @@
 # How to debugging the build of a nix package
 
+<!--
+    cSpell:ignore nixpkgs,printenv
+-->
+
 ## Entering the package's build environment
 
 ```bash
@@ -31,6 +35,16 @@ $ ls "$out"
 # ..
 ```
 
+Note that it is possible to inspect the implementation of the `genericBuild`
+function as follow:
+
+```bash
+$ type genericBuild
+# ..
+```
+
+This is the function that nix uses to build its packages.
+
 ## Building the package phase by phase
 
 ```bash
@@ -38,42 +52,35 @@ $ ls "$out"
 $ mkdir build && cd build
 $ out="$PWD/install" && prefix="$PWD/install"
 
-# The build env provide a 'genericBuild' function
-# whose definition you can inspect using:
-$ type genericBuild
-# ..
-# This is the function that nix uses to build its packages.
-# Note in particular the definition of the 'phase' variable
-# which we unfold just below.
-
-# Unpacking and patching the sources
-$ phases="${prePhases:-} unpackPhase patchPhase" genericBuild
+$ runPhase unpackPhase
 # ..
 # This should have downloaded the package's src under the current
 # directory (`build/my-package-src-dir`) and change your working
 # directory to it.
 
-# Configure
-$ phases="${preConfigurePhases:-} configurePhase" genericBuild
+$ runPhase patchPhase
+# ..
 
-# Build
-$ phases="${preBuildPhases:-} buildPhase" genericBuild
+$ runPhase configurePhase
+# ..
 
-# Checks
-$ phases="checkPhase" genericBuild
+$ runPhase buildPhase
+# ..
 
-# Install
-$ phases="${preInstallPhases[*]:-} installPhase" genericBuild
+$ runPhase checkPhase
+# ..
+
+$ runPhase installPhase
 # ..
 # The package should have installed under the directory specified
 # by the 'out' and/or 'prefix' variable exported above (build/install).
 
-# Fixup
-$ phases="${preFixupPhases[*]:-} fixupPhase" genericBuild
+$ runPhase fixupPhase
+# ..
 
-# Install checks
-$ phases="installCheckPhase ${preDistPhases[*]:-}" genericBuild
+$ runPhase installCheckPhase
+# ..
 
-# Dist
-$ phases="distPhase ${postPhases[*]:-}" genericBuild
+$ runPhase distPhase
+# ..
 ```
