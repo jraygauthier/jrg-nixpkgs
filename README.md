@@ -46,7 +46,7 @@ provides) in various other contexts:
 [overlay-install-on-any-unix]:
     doc/OverlayInstallOnAnyUnixDistro.md
 
-### Dependencies {#install-deps}
+### Dependencies
 
 The following dependencies are required in any cases:
 
@@ -78,7 +78,7 @@ provides) in various other contexts:
  -  [Import the overlay from a flake][overlay-import-from-flake]
  -  [Import the overlay from a classic nix module][overlay-import-from-classic-nix]
 
-[install-deps]: #install-deps
+[install-deps]: #dependencies
 [overlay-import-from-flake]: ./doc/OverlayImportFromFlake.md
 [overlay-import-from-classic-nix]: ./doc/OverlayImportFromClassicNix.md
 
