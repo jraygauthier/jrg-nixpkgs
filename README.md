@@ -98,7 +98,8 @@ provides) in various other contexts:
 
 ## Contributing
 
-A lot of details in [CONTRIBUTING.md](CONTRIBUTING.md).
+Everything required to contribute to and maintain this package set can be found
+in [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
 
