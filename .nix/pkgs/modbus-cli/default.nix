@@ -30,5 +30,6 @@ python3.pkgs.buildPythonApplication rec {
     homepage = "https://github.com/favalex/modbus-cli";
     license = licenses.mpl20;
     maintainers = with maintainers; [ jraygauthier ];
+    mainProgram = "modbus";
   };
 }
