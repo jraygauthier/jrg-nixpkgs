@@ -26,5 +26,6 @@ python3.pkgs.buildPythonApplication rec {
     homepage = "https://github.com/basnijholt/markdown-code-runner";
     license = licenses.mit;
     maintainers = with maintainers; [ lovek323 ];
+    mainProgram = "markdown-code-runner";
   };
 }
