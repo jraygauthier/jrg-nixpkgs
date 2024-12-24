@@ -23,5 +23,6 @@ buildNpmPackage rec {
     homepage = "https://github.com/kessler/node-bcat";
     license = licenses.mit;
     maintainers = with maintainers; [ jraygauthier ];
+    mainProgram = "bcat";
   };
 }
