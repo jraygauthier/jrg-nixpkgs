@@ -61,9 +61,8 @@ The following dependencies are required in any cases:
 
 ## Usage
 
-You can start using this flake's packages directly without having to install
-anything (other than [nix], see [above dependencies section][install-deps] for
-details) via [`nix develop`][nix-develop]:
+You can start using this flake's packages directly via [`nix
+develop`][nix-develop]:
 
 ```bash
 $ nix develop github:jraygauthier/jrg-nixpkgs
@@ -87,7 +86,6 @@ provides) in various other contexts:
  -  [Import the overlay from a flake][overlay-import-from-flake]
  -  [Import the overlay from a classic nix module][overlay-import-from-classic-nix]
 
-[install-deps]: #dependencies
 [nix-develop]: https://nix.dev/manual/nix/2.18/command-ref/new-cli/nix3-develop
 [nix-main-program]: https://nixos.org/manual/nixpkgs/stable/#var-meta-mainProgram
 [nix-run]: https://nix.dev/manual/nix/2.18/command-ref/new-cli/nix3-run
