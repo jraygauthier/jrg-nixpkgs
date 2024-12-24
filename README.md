@@ -17,8 +17,8 @@ A set of [nix] packages I maintain awaiting their inclusion into upstream
 
 ## Install
 
-You can trivially install any package this flake provides in your user profile
-as follow:
+You can trivially install any package this flake provides to your user profile
+via [`nix profile`][nix-profile]:
 
 ```bash
 $ nix profile install github:jraygauthier/jrg-nixpkgs#jrg-nixpkgs-hello
@@ -39,6 +39,7 @@ provides) in various other contexts:
  -  [On a NixOS classic system][overlay-install-on-nixos-classic-system]
  -  [On any Unix distribution][overlay-install-on-any-unix]
 
+[nix-profile]: https://nix.dev/manual/nix/2.18/command-ref/new-cli/nix3-profile
 [overlay-install-on-nixos-flake-based-system]:
     doc/OverlayInstallOnNixosFlakeBasedSystem.md
 [overlay-install-on-nixos-classic-system]:
