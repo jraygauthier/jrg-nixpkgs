@@ -1,0 +1,15 @@
+aarch64
+cachix
+coreutils
+direnv
+gauthier
+jraygauthier
+justfile
+markdownlint
+nixfmt
+nixos
+nixpkgs
+pkgs
+pname
+printenv
+toplevel
