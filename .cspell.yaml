@@ -1,0 +1,12 @@
+version: 0.2
+language: en
+useGitignore: true
+enableGlobDot: true
+ignorePaths:
+ -  /.git/**
+dictionaryDefinitions:
+ -  name: custom
+    path: './.cspell/custom.txt'
+    addWords: true
+dictionaries:
+  - custom
