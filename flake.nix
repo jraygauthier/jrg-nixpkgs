@@ -1,6 +1,6 @@
 {
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-24.11";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.05";
 
     nix-github-actions.url = "github:nix-community/nix-github-actions";
     nix-github-actions.inputs.nixpkgs.follows = "nixpkgs";
@@ -45,7 +45,13 @@
           }
         );
 
-      forAllSystems = forSystems lib.systems.flakeExposed;
+      forAllSystems = forSystems (
+        myLib.filterStringsNotIn [
+          # Since 24.11 -> 25.05 update, 'checks.x86_64-freebsd.node-bcat' fails with:
+          # "Package ‘rustc-wrapper’ in is marked as broken, refusing to evaluate".
+          "x86_64-freebsd"
+        ] lib.systems.flakeExposed
+      );
       forMaintainerSystems = forSystems (
         myLib.filterStringsNotIn [
           # Cannot bootstrap GHC on this platform:
