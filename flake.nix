@@ -14,85 +14,102 @@
       ...
     }:
     let
-      allPackagesFrom =
-        pkgs: with pkgs; {
-          inherit jrg-nixpkgs-hello;
-          inherit markdown-code-runner;
-          inherit modbus-cli;
-          inherit node-bcat;
-        };
+      inherit (nixpkgs) lib;
 
-      systems = [
-        "aarch64-linux"
-        "x86_64-linux"
-        "aarch64-darwin"
-        "x86_64-darwin"
-      ];
+      myLib = import ./.nix/lib/private.nix { inherit lib; };
 
-      forAllSystems =
-        f:
-        nixpkgs.lib.genAttrs systems (
+      getOverlayPackages =
+        pkgs:
+        # Make sure only packages marked as compatible with `pkgs.system` end
+        # up in the final set.
+        myLib.filterSupportedOnSystem pkgs.system (
+          with pkgs;
+          {
+            inherit jrg-nixpkgs-hello;
+            inherit markdown-code-runner;
+            inherit modbus-cli;
+            inherit node-bcat;
+          }
+        );
+
+      forSystems =
+        systems: f:
+        lib.genAttrs systems (
           system:
-          f {
+          f rec {
             pkgs = import nixpkgs {
               inherit system;
               overlays = [ self.overlays.default ];
             };
+            overlayPackages = getOverlayPackages pkgs;
           }
         );
+
+      forAllSystems = forSystems lib.systems.flakeExposed;
+      forMaintainerSystems = forSystems (
+        myLib.filterStringsNotIn [
+          # Cannot bootstrap GHC on this platform:
+          "armv6l-linux"
+          "riscv64-linux"
+          # Package ‘markdownlint-cli is not available on the requested hostPlatform:
+          "x86_64-freebsd"
+        ] lib.systems.flakeExposed
+      );
     in
     {
-      githubActions = nix-github-actions.lib.mkGithubMatrix (
-        let
-          # Exclude systems not supported by github actions.
-          ciSystems = builtins.filter (x: !({ "aarch64-linux" = null; } ? "${x}")) systems;
-        in
-        {
-          checks = nixpkgs.lib.getAttrs ciSystems self.checks;
-        }
-      );
+      githubActions = nix-github-actions.lib.mkGithubMatrix ({
+        # Github actions only support a limited set of systems.
+        checks = lib.getAttrs [
+          "x86_64-linux"
+          "x86_64-darwin"
+          "aarch64-darwin"
+        ] self.checks;
+      });
 
       overlays = {
         default = import ./.nix/overlays.nix;
       };
 
-      devShells = forAllSystems (
-        { pkgs, ... }:
-        rec {
-          default = packages;
+      devShells = myLib.mergePerSystemAttrs [
+        (forAllSystems (
+          { pkgs, overlayPackages, ... }:
+          rec {
+            default = packages;
 
-          packages = pkgs.mkShell {
-            packages = builtins.attrValues (allPackagesFrom pkgs);
-          };
-
-          maintainer = pkgs.mkShell {
-            packages = with pkgs; [
-              bashInteractive
-              coreutils
-              fd
-              just
-              markdownlint-cli
-              nixfmt-rfc-style
-              nodePackages.cspell
-            ];
-          };
-        }
-      );
+            packages = pkgs.mkShell {
+              packages = builtins.attrValues overlayPackages;
+            };
+          }
+        ))
+        (forMaintainerSystems (
+          { pkgs, ... }:
+          {
+            maintainer = pkgs.mkShell {
+              packages = with pkgs; [
+                bashInteractive
+                coreutils
+                fd
+                just
+                markdownlint-cli
+                nixfmt-rfc-style
+                nodePackages.cspell
+              ];
+            };
+          }
+        ))
+      ];
 
       packages = forAllSystems (
-        { pkgs, ... }:
-        let
-          all = allPackagesFrom pkgs;
-        in
-        all
+        { pkgs, overlayPackages, ... }:
+        overlayPackages
         // {
           default = pkgs.symlinkJoin {
             name = "flake-all-packages";
-            paths = builtins.attrValues all;
+            paths = builtins.attrValues overlayPackages;
           };
         }
       );
 
-      checks = nixpkgs.lib.getAttrs systems self.packages;
+      checks = self.packages;
     };
 }
